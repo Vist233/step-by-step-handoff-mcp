@@ -1,0 +1,53 @@
+{
+  "name": "step-by-step-handoff-mcp",
+  "version": "0.2.0",
+  "description": "MCP server for multi-agent swarms: agents hand off verified work packages (skills, lemmas, datasets, patches) step by step instead of sharing context.",
+  "type": "module",
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "bin": {
+    "step-by-step-handoff-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.en.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --import tsx --test test/*.test.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "multi-agent",
+    "agent-swarm",
+    "agent-handoff",
+    "agent-skills",
+    "claude-code",
+    "verified-artifacts"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vist233/step-by-step-handoff-mcp.git"
+  },
+  "homepage": "https://github.com/Vist233/step-by-step-handoff-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/Vist233/step-by-step-handoff-mcp/issues"
+  },
+  "author": "Vist233"
+}

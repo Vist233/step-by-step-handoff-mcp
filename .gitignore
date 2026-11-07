@@ -1,0 +1,6 @@
+node_modules
+dist
+.exchange
+# real end-to-end agent evaluation and working notes stay local
+eval/
+internal/

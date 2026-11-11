@@ -37,7 +37,7 @@ async function withSourceDirectory<T>(source: PublishSource, work: (dir: string)
   }
 }
 
-async function buildStoredManifest(packageDir: string): Promise<StoredManifest> {
+async function buildStoredManifest(packageDir: string, author: string): Promise<StoredManifest> {
   const authored = await readAuthoredManifest(packageDir);
   const identity = splitPackageId(authored.id);
   const listed = await listPackageFiles(packageDir);
@@ -49,7 +49,7 @@ async function buildStoredManifest(packageDir: string): Promise<StoredManifest> 
     ...authored,
     type: identity.type,
     files,
-    provenance: { author: process.env.HANDOFF_AGENT_ID ?? "unknown", created: new Date().toISOString() },
+    provenance: { author, created: new Date().toISOString() },
   };
 }
 
@@ -71,9 +71,20 @@ async function verifyInScratchWorkspace(
   }
 }
 
-export async function publishPackage(storeRoot: string, source: PublishSource, hooks: Hooks): Promise<PublishResult> {
+export interface PublishOptions {
+  /** Recorded as the package's author. Default: the HANDOFF_AGENT_ID environment variable, or "unknown". */
+  author?: string;
+}
+
+export async function publishPackage(
+  storeRoot: string,
+  source: PublishSource,
+  hooks: Hooks,
+  options: PublishOptions = {},
+): Promise<PublishResult> {
+  const author = options.author ?? process.env.HANDOFF_AGENT_ID ?? "unknown";
   return withSourceDirectory(source, async (packageDir) => {
-    const manifest = await buildStoredManifest(packageDir);
+    const manifest = await buildStoredManifest(packageDir, author);
     const identity = { id: manifest.id, version: manifest.version };
 
     if (await isVersionTaken(storeRoot, manifest.id, manifest.version)) {

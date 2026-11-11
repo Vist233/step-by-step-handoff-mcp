@@ -6,12 +6,12 @@
     "url": "https://github.com/Vist233/step-by-step-handoff-mcp",
     "source": "github"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "step-by-step-handoff-mcp",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "transport": {
         "type": "stdio"
       }

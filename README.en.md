@@ -9,7 +9,7 @@ reusable result (a proven lemma, a skill, a dataset, a patch) and publishes it. 
 search for it, pull it into their own working directory, re-verify it locally, and build on
 it, without ever reading the producer's context.
 
-> **Status: v0.1 runs locally and passes its tests; not yet published to npm.** Interfaces may change.
+> **Status: v0.3 is on npm and passes its tests.** Interfaces may still change.
 
 ## What is it?
 
@@ -87,6 +87,27 @@ createServer({ review: createLlmReview({ apiKey: process.env.DEEPSEEK_API_KEY! }
 function. A review only approves or rejects; there is no human queue. The only environment
 variables are `HANDOFF_STORE` (store location), `HANDOFF_AGENT_ID` (author id) and
 `HANDOFF_WORKDIR` (pull target).
+
+## Use it as a library (v0.3)
+
+The MCP server reads its store, working directory and author from environment variables, which suits one agent per process. A program that runs many agents in one process imports the library entry instead, which takes those three things as arguments and never reads the environment:
+
+```ts
+import { createHandoff } from "step-by-step-handoff-mcp/core";
+
+const handoff = createHandoff({
+  storeRoot: "/data/handoff",          // shared by every handle (absolute path)
+  workDir: "/data/agents/a1/files",    // this agent's pulls land in <workDir>/.exchange/ (absolute path)
+  agentId: "a1",                       // recorded as the author of what it publishes
+  hooks: { review },                   // optional: your own review or verify function
+});
+await handoff.search({ query: "type:skill" });
+await handoff.peek({ id: "skill/x", path: "." });
+await handoff.pull({ id: "skill/x", verify: true });
+await handoff.publish("/path/to/package-dir");   // or { "handoff.json": ..., "file": "content" }
+```
+
+`"."` is still the MCP server; `"./core"` is the library. Other deep imports (`step-by-step-handoff-mcp/dist/...`) are not part of the package's interface.
 
 ## Example
 

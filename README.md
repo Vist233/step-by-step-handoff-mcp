@@ -9,7 +9,7 @@
 其他 Agent 搜索、拉取到自己的工作目录、在本地重新验证后继续往下做，全程不需要读取前一个
 Agent 的上下文。
 
-> **状态：v0.1 已可在本地运行并通过测试，尚未发布到 npm。** 接口可能调整。
+> **状态：v0.3 已发布到 npm 并通过测试。** 接口仍可能调整。
 
 ## 它是什么？
 
@@ -84,6 +84,27 @@ createServer({ review: createLlmReview({ apiKey: process.env.DEEPSEEK_API_KEY! }
 
 `verify` 同理，默认运行 `handoff.json` 里的命令，也可以换成任何函数。审核只有“通过”和“拒绝”，
 没有人工队列。环境变量只有存储位置 `HANDOFF_STORE`、作者标识 `HANDOFF_AGENT_ID`、拉取目录 `HANDOFF_WORKDIR`。
+
+## 作为库使用（v0.3）
+
+MCP 服务器通过环境变量读取存储位置、工作目录和作者，适合一个进程一个 Agent。如果一个程序在同一进程里运行许多 Agent，请改用库入口：这三项都作为参数传入，从不读取环境变量。
+
+```ts
+import { createHandoff } from "step-by-step-handoff-mcp/core";
+
+const handoff = createHandoff({
+  storeRoot: "/data/handoff",          // 所有句柄共用（绝对路径）
+  workDir: "/data/agents/a1/files",    // 该 Agent 拉取的包放在 <workDir>/.exchange/（绝对路径）
+  agentId: "a1",                       // 记为它所发布内容的作者
+  hooks: { review },                   // 可选：自己的审核或校验函数
+});
+await handoff.search({ query: "type:skill" });
+await handoff.peek({ id: "skill/x", path: "." });
+await handoff.pull({ id: "skill/x", verify: true });
+await handoff.publish("/path/to/package-dir");   // 或 { "handoff.json": ..., "文件": "内容" }
+```
+
+`"."` 仍是 MCP 服务器，`"./core"` 是库。其他深层导入（`step-by-step-handoff-mcp/dist/...`）不属于包的对外接口。
 
 ## 示例
 

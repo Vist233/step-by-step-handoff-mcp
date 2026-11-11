@@ -37,7 +37,7 @@ For type "skill", SKILL.md must start with frontmatter: ---\nname: <the name par
 
 export function createServer(hookOverrides: Partial<Hooks> = {}): McpServer {
   const hooks: Hooks = { ...defaultHooks, ...hookOverrides };
-  const server = new McpServer({ name: "step-by-step-handoff-mcp", version: "0.2.0" });
+  const server = new McpServer({ name: "step-by-step-handoff-mcp", version: "0.3.0" });
   const storeRoot = resolveStoreRoot();
   const workDir = process.env.HANDOFF_WORKDIR ?? process.cwd();
 

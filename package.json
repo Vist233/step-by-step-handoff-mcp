@@ -1,11 +1,22 @@
 {
   "name": "step-by-step-handoff-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "mcpName": "io.github.Vist233/step-by-step-handoff-mcp",
   "description": "MCP server for multi-agent swarms: agents hand off verified work packages (skills, lemmas, datasets, patches) step by step instead of sharing context.",
   "type": "module",
   "main": "dist/server.js",
   "types": "dist/server.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    },
+    "./core": {
+      "types": "./dist/lib.d.ts",
+      "default": "./dist/lib.js"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
     "step-by-step-handoff-mcp": "dist/index.js"
   },
